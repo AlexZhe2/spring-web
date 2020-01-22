@@ -1,40 +1,95 @@
 package com.ifmojava.springweb.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public class User {
-//    @Min(3)
-//    @Max(34)
-    @Size(min = 3, max = 34, message = "От 3 до 34 символов")
-    private String login;
+@Entity
+@Table(name = "user_table")
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    private int id;
 
-    @Pattern(regexp = "", message = "Ошибка при вводе пароля")
-    private String pwd;
+    @Size(min = 2, message = "Минимум 2 символа")
+    private String username;
+    @Size(min = 3, message = "Минимум 3 символа")
+    private String password;
+    @Transient
+    private String passwordConfirm;
 
-    @Email(message = "Ошибка при вводе email")
-    private String email;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles = new HashSet<>();
 
-    public String getEmail() {
-        return email;
+    public int getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getPwd() {
-        return pwd;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
