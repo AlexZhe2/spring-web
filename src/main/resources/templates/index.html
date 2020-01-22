@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="base :: head(~{::title})">
     <title>Страница</title>
 
@@ -34,11 +36,27 @@
                         <a class="dropdown-item" href="/student/show">Участники</a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" href="/login">
+                        Войти
+                    </a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" href="/logout">
+                        Выйти
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
 </header>
 
+    <p sec:authorize="hasRole('USER')">
+        <span sec:authentication="name"></span>,
+        Вы можете добавлять события и тд
+    </p>
+    <p sec:authorize="hasRole('ADMIN')">
+        <span sec:authentication="name"></span>,
+        Вы можете добавлять пользователей
+    </p>
 <!--подключение изображений из папки static-->
     <img th:src="@{/img/spring.jpg}">
 

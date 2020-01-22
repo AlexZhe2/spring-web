@@ -10,6 +10,7 @@ public class SomeController {
 
     @RequestMapping("/")
     public String index(Principal principal){
+        System.out.println(principal.getName());
         return "index";
     }
 }
